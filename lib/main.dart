@@ -33,11 +33,14 @@ class _MyHomePageState extends State<MyHomePage> {
   double _counter = 0;
   void setNewValue(double value)
   {
-    _counter = value;
+    setState(() {
+      _counter = value;
+    });
   }
   void _incrementCounter() {
     setState(() {
-      _counter++;
+      if(_counter < 99.0)
+        _counter++;
     });
   }
 
@@ -58,7 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
-            Slider(value: _counter, onChanged: setNewValue,)
+            Slider(value:_counter, max:100.0, onChanged: setNewValue, min:0.0 )
           ],
         ),
       ),
