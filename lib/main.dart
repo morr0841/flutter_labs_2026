@@ -10,12 +10,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Lab 2',
       theme: ThemeData(
 
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Lab 02'),
     );
   }
 }
@@ -30,25 +30,11 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  double _counter = 0;
-  void setNewValue(double value)
-  {
-    setState(() {
-      _counter = value;
-    });
-  }
-  void _incrementCounter() {
-    setState(() {
-      if(_counter < 99.0)
-        _counter++;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
@@ -56,20 +42,25 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text('You have pushed the button this many times:', ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+            TextField(
+              decoration: InputDecoration(
+                  hintText: 'Login',
+                  border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(5)))
+              ),
             ),
-            Slider(value:_counter, max:100.0, onChanged: setNewValue, min:0.0 )
+            TextField(
+              obscureText: true,
+              decoration: InputDecoration(
+                  hintText: 'Password',
+                  border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(5)))
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {  }, //  <--- Lambda function
+              child:Text('Login'),
+            )
           ],
         ),
-      ),
-
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ),
     );
   }
