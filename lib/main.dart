@@ -22,15 +22,30 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
   final String title;
+
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  late TextEditingController _passwordController = TextEditingController();
+  String _imagePath = 'images/question-mark.png';
 
+
+  @override
+  void initState() {
+    super.initState();
+    _passwordController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    //free memory:
+    _passwordController.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,15 +64,33 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             TextField(
+              controller: _passwordController,
               obscureText: true,
               decoration: InputDecoration(
                   hintText: 'Password',
                   border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(5)))
               ),
             ),
-            ElevatedButton(
-              onPressed: () {  }, //  <--- Lambda function
-              child:Text('Login'),
+            ElevatedButton(onPressed: () {
+              setState((){
+                var txt = _passwordController.value.text;
+                if (txt == "QWERTY123") {
+                  _imagePath = 'images/idea.png';
+                } else {
+                  _imagePath = 'images/stop.png';
+                }
+              });
+            }, //<-- Lambda, or anonymous function
+               child: Text('Login', style: TextStyle(color: Colors.blue, fontSize: 20),),
+            ),
+            //Image.asset(_imagePath, width: 100, height: 100),
+            Semantics(
+              label: _imagePath == 'images/idea.png'
+              ? 'image: lightbulb. Correct password.'
+              : _imagePath == 'images/stop.png'
+              ? 'image: stop sign. Wrong password.'
+              : 'image: Question marks. Enter your Password',
+              child: Image.asset(_imagePath, width: 100, height: 100,),
             )
           ],
         ),
@@ -65,3 +98,4 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
