@@ -57,20 +57,27 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            TextField(
-              decoration: InputDecoration(
-                  hintText: 'Login',
-                  border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(5)))
+            Padding(padding: EdgeInsets.symmetric(vertical: 0, horizontal: 25.0),
+              child: TextField(
+                decoration: InputDecoration(
+                    hintText: 'Login',
+                    border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(5)))
+                ),
               ),
             ),
-            TextField(
-              controller: _passwordController,
-              obscureText: true,
-              decoration: InputDecoration(
-                  hintText: 'Password',
-                  border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(5)))
+              Padding(padding: EdgeInsets.symmetric(vertical: 10, horizontal: 25.0),
+                child:
+                TextField(
+                  controller: _passwordController,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                      hintText: 'Password',
+                      border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(5)))
+                  ),
+                ),
               ),
-            ),
+
+
             ElevatedButton(onPressed: () {
               setState((){
                 var txt = _passwordController.value.text;
@@ -89,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ? 'image: lightbulb. Correct password.'
               : _imagePath == 'images/stop.png'
               ? 'image: stop sign. Wrong password.'
-              : 'image: Question marks. Enter your Password',
+              : 'image: Question marks. Default image. Please enter your Password',
               child: Image.asset(_imagePath, width: 100, height: 100,),
             )
           ],
