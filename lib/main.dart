@@ -87,7 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   _imagePath = 'images/stop.png';
                 }
               });
-            }, //<-- Lambda, or anonymous function
+            },
                child: Text('Login', style: TextStyle(color: Colors.blue, fontSize: 20),),
             ),
             //Image.asset(_imagePath, width: 100, height: 100),
