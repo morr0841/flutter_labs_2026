@@ -81,7 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ElevatedButton(onPressed: () {
               setState((){
                 var txt = _passwordController.value.text;
-                if (txt == "QWERTY123") {
+                if (txt == "ASDF") {
                   _imagePath = 'images/idea.png';
                 } else {
                   _imagePath = 'images/stop.png';
@@ -90,7 +90,6 @@ class _MyHomePageState extends State<MyHomePage> {
             },
                child: Text('Login', style: TextStyle(color: Colors.blue, fontSize: 20),),
             ),
-            //Image.asset(_imagePath, width: 100, height: 100),
             Semantics(
               label: _imagePath == 'images/idea.png'
               ? 'image: lightbulb. Correct password.'
