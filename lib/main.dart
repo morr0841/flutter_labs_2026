@@ -27,8 +27,7 @@ class MyHomePage extends StatefulWidget {
 
 
   final String title;
-
-  @override
+    @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
@@ -36,11 +35,15 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    double circleRadius = 50.0;
+    double hoverText = 20.0;
+    double belowText = 15.0;
         return Scaffold(   //for the whole page
+
 
         body: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               Text("BROWSE CATEGORIES", style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
               ),
@@ -55,93 +58,93 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
 
               Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                    Stack( alignment: AlignmentDirectional.center,
                      children: <Widget>[
                      CircleAvatar(
-                      backgroundImage: AssetImage("images/beef.jpg"), radius: 60),
-                       Text("BEEF", style: TextStyle(fontSize: 30.0, color: Colors.white),)
+                      backgroundImage: AssetImage("images/beef.jpg"), radius: circleRadius),
+                       Text("BEEF", style: TextStyle(fontSize: hoverText, color: Colors.white),)
                      ]),
                     Stack( alignment: AlignmentDirectional.center,
                         children: <Widget>[
                           CircleAvatar(
-                              backgroundImage: AssetImage("images/chicken.jpg"), radius: 60),
-                          Text("CHICKEN", style: TextStyle(fontSize: 30.0, color: Colors.white),)
+                              backgroundImage: AssetImage("images/chicken.jpg"), radius: circleRadius),
+                          Text("CHICKEN", style: TextStyle(fontSize: hoverText, color: Colors.white),)
                         ]),
                     Stack( alignment: AlignmentDirectional.center,
                         children: <Widget>[
                           CircleAvatar(
-                              backgroundImage: AssetImage("images/pork.jpg"), radius: 60),
-                          Text("PORK", style: TextStyle(fontSize: 30.0, color: Colors.white),)
+                              backgroundImage: AssetImage("images/pork.jpg"), radius: circleRadius),
+                          Text("PORK", style: TextStyle(fontSize: hoverText, color: Colors.white),)
                         ]),
                     Stack( alignment: AlignmentDirectional.center,
                         children: <Widget>[
                           CircleAvatar(
-                              backgroundImage: AssetImage("images/seafood.jpeg"), radius: 60),
-                          Text("SEAFOOD", style: TextStyle(fontSize: 30.0, color: Colors.white),)
+                              backgroundImage: AssetImage("images/seafood.jpeg"), radius: circleRadius),
+                          Text("SEAFOOD", style: TextStyle(fontSize: hoverText, color: Colors.white),)
                         ]),
                       ],
                   ),
-              Text("BY COURSE", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              Text("BY COURSE", style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  Stack( alignment: AlignmentDirectional.bottomCenter,
+                  Column( mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         CircleAvatar(
-                            backgroundImage: AssetImage("images/main-dishes.jpg"), radius: 60),
-                        Text("Main Dishes", style: TextStyle(fontSize: 30.0, color: Colors.black, backgroundColor: Color.fromRGBO(255, 255, 255, 0.3)),)
+                            backgroundImage: AssetImage("images/main-dishes.jpg"), radius: circleRadius),
+                        Text("Main Dishes", style: TextStyle(fontSize: belowText, fontWeight: FontWeight.bold, color: Colors.black, backgroundColor: Color.fromRGBO(255, 255, 255, 0.3)),)
                       ]),
-                  Stack( alignment: AlignmentDirectional.bottomCenter,
+                  Column( mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         CircleAvatar(
-                            backgroundImage: AssetImage("images/salad.jpeg"), radius: 60),
-                        Text("Salad Recipes", style: TextStyle(fontSize: 30.0, color: Colors.black, backgroundColor: Color.fromRGBO(255, 255, 255, 0.3)),)
+                            backgroundImage: AssetImage("images/salad.jpeg"), radius: circleRadius),
+                        Text("Salad Recipes", style: TextStyle(fontSize: belowText, fontWeight: FontWeight.bold, color: Colors.black, backgroundColor: Color.fromRGBO(255, 255, 255, 0.3)),)
                       ]),
-                  Stack( alignment: AlignmentDirectional.bottomCenter,
+                  Column( mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         CircleAvatar(
-                            backgroundImage: AssetImage("images/side-dishes.jpeg"), radius: 60),
-                        Text("Side Dishes", style: TextStyle(fontSize: 30.0, color: Colors.black, backgroundColor: Color.fromRGBO(255, 255, 255, 0.3)),)
+                            backgroundImage: AssetImage("images/side-dishes.jpeg"), radius: circleRadius),
+                        Text("Side Dishes", style: TextStyle(fontSize: belowText, fontWeight: FontWeight.bold, color: Colors.black, backgroundColor: Color.fromRGBO(255, 255, 255, 0.3)),)
                       ]),
-                  Stack( alignment: AlignmentDirectional.bottomCenter,
+                  Column( mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         CircleAvatar(
-                            backgroundImage: AssetImage("images/crockpot.jpg"), radius: 60),
-                        Text("Crockpot", style: TextStyle(fontSize: 30.0, color: Colors.black, backgroundColor: Color.fromRGBO(255, 255, 255, 0.3)),)
+                            backgroundImage: AssetImage("images/crockpot.jpg"), radius: circleRadius),
+                        Text("Crockpot", style: TextStyle(fontSize: belowText, fontWeight: FontWeight.bold, color: Colors.black, backgroundColor: Color.fromRGBO(255, 255, 255, 0.3)),)
                       ]),
                 ],
               ),
               Text("BY DESSERT", style: TextStyle(backgroundColor: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  Stack( alignment: AlignmentDirectional.bottomCenter,
+                  Column( mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         CircleAvatar(
-                            backgroundImage: AssetImage("images/icecream.jpeg"), radius: 60),
-                        Text("Ice Cream", style: TextStyle(fontSize: 30.0, color: Colors.black, backgroundColor: Color.fromRGBO(255, 255, 255, 0.3)),)
+                            backgroundImage: AssetImage("images/icecream.jpeg"), radius: circleRadius),
+                        Text("Ice Cream", style: TextStyle(fontSize: belowText, fontWeight: FontWeight.bold, color: Colors.black, backgroundColor: Color.fromRGBO(255, 255, 255, 0.3)),)
                       ]),
-                  Stack( alignment: AlignmentDirectional.bottomCenter,
+                  Column( mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         CircleAvatar(
-                            backgroundImage: AssetImage("images/brownies.jpeg"), radius: 60),
-                        Text("Brownies", style: TextStyle(fontSize: 30.0, color: Colors.black, backgroundColor: Color.fromRGBO(255, 255, 255, 0.3)),)
+                            backgroundImage: AssetImage("images/brownies.jpeg"), radius: circleRadius),
+                        Text("Brownies", style: TextStyle(fontSize: belowText, fontWeight: FontWeight.bold, color: Colors.black, backgroundColor: Color.fromRGBO(255, 255, 255, 0.3)),)
                       ]),
-                  Stack( alignment: AlignmentDirectional.bottomCenter,
+                  Column( mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         CircleAvatar(
-                            backgroundImage: AssetImage("images/pies.jpeg"), radius: 60),
-                        Text("Pies", style: TextStyle(fontSize: 30.0, color: Colors.black, backgroundColor: Color.fromRGBO(255, 255, 255, 0.3)),)
+                            backgroundImage: AssetImage("images/pies.jpeg"), radius: circleRadius),
+                        Text("Pies", style: TextStyle(fontSize: belowText, fontWeight: FontWeight.bold, color: Colors.black, backgroundColor: Color.fromRGBO(255, 255, 255, 0.3)),)
                       ]),
-                  Stack( alignment: AlignmentDirectional.bottomCenter,
+                  Column( mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         CircleAvatar(
-                            backgroundImage: AssetImage("images/cookies.jpg"), radius: 60),
-                        Text("Cookies", style: TextStyle(fontSize: 30.0, color: Colors.black, backgroundColor: Color.fromRGBO(255, 255, 255, 0.3)),)
+                            backgroundImage: AssetImage("images/cookies.jpg"), radius: circleRadius),
+                        Text("Cookies", style: TextStyle(fontSize: belowText, fontWeight: FontWeight.bold, color: Colors.black, backgroundColor: Color.fromRGBO(255, 255, 255, 0.3)),)
                       ]),
                 ],
               ),
