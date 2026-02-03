@@ -17,6 +17,7 @@ class MyApp extends StatelessWidget {
 
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
+
       home: const MyHomePage(title: 'Lab 03'),
     );
   }
@@ -43,7 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
         body: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text("BROWSE CATEGORIES", style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
               ),
@@ -58,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
 
               Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
                    Stack( alignment: AlignmentDirectional.center,
                      children: <Widget>[
@@ -89,7 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Text("BY COURSE", style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
                   Column( mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
@@ -120,7 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Text("BY DESSERT", style: TextStyle(backgroundColor: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
                   Column( mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
