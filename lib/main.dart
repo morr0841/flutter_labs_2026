@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(const MyApp());
@@ -30,7 +31,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  late TextEditingController _passwordController = TextEditingController();
+  late SharedPreferences prefs;
+  late TextEditingController _passwordController;
   String _imagePath = 'images/question-mark.png';
 
 
@@ -38,6 +40,24 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     _passwordController = TextEditingController();
+    SharedPreferences.getInstance().then((result) {
+      prefs = result;
+      var passwordExists = prefs.getString("UserPassword");
+      if (passwordExists != null) {
+        _passwordController.text = passwordExists;
+      }
+    });
+
+    Future.delayed(Duration(seconds: 0), (){
+      //TODO make this snackbar ONLY show if the user has chosen to load strings from shared preferences. if/then statement?
+      var snackBar =
+      SnackBar( content: Text('Your saved settings have been loaded.'),
+        action: SnackBarAction(label: 'Understood', onPressed: ( ){ }),
+      );
+      //this displays it:
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    });
+
   }
 
   @override
@@ -53,6 +73,7 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
+
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -79,10 +100,29 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
             ElevatedButton(onPressed: () {
+              //TODO make these encrypted
               setState((){
                 var txt = _passwordController.value.text;
                 if (txt == "ASDF") {
                   _imagePath = 'images/idea.png';
+
+                  showDialog<String>(
+                    context:context,
+                    builder: (context) => AlertDialog(
+                      title: const Text('Attention'),
+                      content: const Text("Would you like to save your login and password?"),
+                      actions: [
+                        OutlinedButton(child:const Text("Yes"), onPressed: (){
+                          prefs.setString("UserPassword", _passwordController.value.text);
+                          Navigator.pop(context);}),
+
+                        OutlinedButton(child:const Text("No"), onPressed: (){
+                          prefs.remove("UserPassword");
+                          Navigator.pop(context);})
+                      ]
+                    )
+                  );
+
                 } else {
                   _imagePath = 'images/stop.png';
                 }
