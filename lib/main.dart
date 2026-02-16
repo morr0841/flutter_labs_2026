@@ -1,3 +1,4 @@
+import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -11,12 +12,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Lab 2',
+      title: 'Lab 4',
       theme: ThemeData(
 
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'Lab 02'),
+      home: const MyHomePage(title: 'Lab 04'),
     );
   }
 }
@@ -31,8 +32,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  late SharedPreferences prefs;
+  late EncryptedSharedPreferences prefs;
   late TextEditingController _passwordController;
+  late TextEditingController _userController;
   String _imagePath = 'images/question-mark.png';
 
 
@@ -40,24 +42,40 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     _passwordController = TextEditingController();
-    SharedPreferences.getInstance().then((result) {
-      prefs = result;
-      var passwordExists = prefs.getString("UserPassword");
-      if (passwordExists != null) {
-        _passwordController.text = passwordExists;
+    _userController = TextEditingController();
+    prefs = EncryptedSharedPreferences();
+
+    var userLoaded = false;
+    var passwordLoaded = false;
+
+    prefs.getString("UserPassword").then((passwordThere){
+      if (passwordThere.isNotEmpty) {
+        _passwordController.text = passwordThere;
+        passwordLoaded = true;
+      }
+
+      if (userLoaded && passwordLoaded) {
+        _showSnackBar();
+      }
+    });
+    prefs.getString("Username").then((userThere){
+      if (userThere.isNotEmpty) {
+        _userController.text = userThere;
+        userLoaded = true;
+      }
+
+      if (userLoaded && passwordLoaded) {
+        _showSnackBar();
       }
     });
 
-    Future.delayed(Duration(seconds: 0), (){
-      //TODO make this snackbar ONLY show if the user has chosen to load strings from shared preferences. if/then statement?
+  }
+  void _showSnackBar() {
       var snackBar =
-      SnackBar( content: Text('Your saved settings have been loaded.'),
-        action: SnackBarAction(label: 'Understood', onPressed: ( ){ }),
+      SnackBar(content: Text('Your saved settings have been loaded.'),
+        action: SnackBarAction(label: 'Understood', onPressed: () {}),
       );
-      //this displays it:
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    });
-
   }
 
   @override
@@ -65,6 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose();
     //free memory:
     _passwordController.dispose();
+    _userController.dispose();
   }
   @override
   Widget build(BuildContext context) {
@@ -80,9 +99,10 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             Padding(padding: EdgeInsets.symmetric(vertical: 0, horizontal: 25.0),
               child: TextField(
+                controller: _userController,
                 decoration: InputDecoration(
-                    hintText: 'Login',
-                    border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(5)))
+                hintText: 'Login',
+                border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(5)))
                 ),
               ),
             ),
@@ -100,28 +120,30 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
             ElevatedButton(onPressed: () {
-              //TODO make these encrypted
               setState((){
                 var txt = _passwordController.value.text;
+                showDialog<String>(
+                    context:context,
+                    builder: (context) => AlertDialog(
+                        title: const Text('Attention'),
+                        content: const Text("Would you like to save your username and password?"),
+                        actions: [
+                          OutlinedButton(child:const Text("Yes"), onPressed: (){
+                            prefs.setString("UserPassword", _passwordController.value.text);
+                            prefs.setString("Username", _userController.value.text);
+                            Navigator.pop(context);}),
+
+                          OutlinedButton(child:const Text("No"), onPressed: (){
+                            prefs.remove("UserPassword");
+                            prefs.remove("Username");
+                            Navigator.pop(context);})
+                        ]
+                    )
+                );
                 if (txt == "ASDF") {
                   _imagePath = 'images/idea.png';
 
-                  showDialog<String>(
-                    context:context,
-                    builder: (context) => AlertDialog(
-                      title: const Text('Attention'),
-                      content: const Text("Would you like to save your login and password?"),
-                      actions: [
-                        OutlinedButton(child:const Text("Yes"), onPressed: (){
-                          prefs.setString("UserPassword", _passwordController.value.text);
-                          Navigator.pop(context);}),
-
-                        OutlinedButton(child:const Text("No"), onPressed: (){
-                          prefs.remove("UserPassword");
-                          Navigator.pop(context);})
-                      ]
-                    )
-                  );
+                  ;
 
                 } else {
                   _imagePath = 'images/stop.png';
