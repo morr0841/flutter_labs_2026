@@ -1,6 +1,7 @@
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:my_flutter_labs/DataRepository.dart';
+import 'package:my_flutter_labs/ProfilePage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,12 +13,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Lab 4',
+      routes: {
+        "/" : (context) => MyHomePage(title: "Home page"),
+        "/profilePage" : (context) => ProfilePage()
+      },
+      title: 'Lab 5',
       theme: ThemeData(
-
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'Lab 04'),
+      initialRoute: "/",
     );
   }
 }
@@ -91,6 +95,12 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
+        actions: [
+          ElevatedButton(child: Text("Profile Page"), onPressed: (){
+            DataRepository.loginName = _userController.text;
+            Navigator.pushNamed(context, "/profilePage");
+          }),
+        ],
       ),
 
       body: Center(
