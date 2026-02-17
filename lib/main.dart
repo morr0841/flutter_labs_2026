@@ -17,6 +17,7 @@ class MyApp extends StatelessWidget {
         "/" : (context) => MyHomePage(title: "Home page"),
         "/profilePage" : (context) => ProfilePage()
       },
+      debugShowCheckedModeBanner: false,
       title: 'Lab 5',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -132,30 +133,32 @@ class _MyHomePageState extends State<MyHomePage> {
             ElevatedButton(onPressed: () {
               setState((){
                 var txt = _passwordController.value.text;
-                showDialog<String>(
-                    context:context,
-                    builder: (context) => AlertDialog(
-                        title: const Text('Attention'),
-                        content: const Text("Would you like to save your username and password?"),
-                        actions: [
-                          OutlinedButton(child:const Text("Yes"), onPressed: (){
-                            prefs.setString("UserPassword", _passwordController.value.text);
-                            prefs.setString("Username", _userController.value.text);
-                            Navigator.pop(context);}),
 
-                          OutlinedButton(child:const Text("No"), onPressed: (){
-                            prefs.remove("UserPassword");
-                            prefs.remove("Username");
-                            Navigator.pop(context);})
-                        ]
-                    )
-                );
                 if (txt == "ASDF") {
                   _imagePath = 'images/idea.png';
+                  showDialog<String>(
+                      context:context,
+                      builder: (context) => AlertDialog(
+                          title: const Text('Attention'),
+                          content: const Text("Would you like to save your username and password?"),
+                          actions: [
+                            OutlinedButton(child:const Text("Yes"), onPressed: (){
+                              var username = _userController.value.text;
+                              var passwordField = _passwordController.value.text;
 
-                  ;
+                              DataRepository.saveData(username, passwordField);
+                              Navigator.of(context).pop();
+                              Navigator.pushNamed(context, "/profilePage");}),
 
-                } else {
+                            OutlinedButton(child:const Text("No."), onPressed: (){
+                              prefs.remove("UserPassword");
+                              Navigator.of(context).pop();
+                              Navigator.pushNamed(context, "/profilePage");})
+                          ]
+                      )
+                  );
+                }
+                else {
                   _imagePath = 'images/stop.png';
                 }
               });
