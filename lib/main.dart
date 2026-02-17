@@ -96,12 +96,6 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
-        actions: [
-          ElevatedButton(child: Text("Profile Page"), onPressed: (){
-            DataRepository.loginName = _userController.text;
-            Navigator.pushNamed(context, "/profilePage");
-          }),
-        ],
       ),
 
       body: Center(
@@ -146,7 +140,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               var username = _userController.value.text;
                               var passwordField = _passwordController.value.text;
 
-                              DataRepository.saveData(username, passwordField);
+                              DataRepository.saveData(username: username, passwordField: passwordField);
                               Navigator.of(context).pop();
                               Navigator.pushNamed(context, "/profilePage");}),
 

@@ -16,7 +16,6 @@ class ProfilePageState extends State<ProfilePage> {
   late TextEditingController _phoneController;
   late TextEditingController _emailController;
 
-
   @override
   void initState() {
     super.initState();
@@ -24,7 +23,7 @@ class ProfilePageState extends State<ProfilePage> {
     _lNameController = TextEditingController();
     _phoneController = TextEditingController();
     _emailController = TextEditingController();
-    DataRepository.loadData();
+    _loadProfileData();
     Future.delayed(Duration(seconds: 0), (){
       var snackBar =
       SnackBar( content: Text('Welcome to your profile page ${DataRepository.loginName}!'),
@@ -34,6 +33,29 @@ class ProfilePageState extends State<ProfilePage> {
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     });
   }
+
+  Future<void> _loadProfileData() async {
+    await DataRepository.loadData();
+
+    if (DataRepository.firstName.isNotEmpty) {
+      _fNameController.text = DataRepository.firstName;
+    }
+
+    if (DataRepository.lastName.isNotEmpty) {
+      _lNameController.text = DataRepository.lastName;
+    }
+
+    if (DataRepository.phone.isNotEmpty) {
+      _phoneController.text = DataRepository.phone;
+    }
+
+    if (DataRepository.email.isNotEmpty) {
+      _emailController.text = DataRepository.email;
+    }
+
+    setState(() {});
+  }
+
 
   @override
   void dispose() {
@@ -89,25 +111,29 @@ class ProfilePageState extends State<ProfilePage> {
               ),
             ),),
             IconButton(onPressed: () async {
-              var number = Uri.parse("tel:$_phoneController");
+              var phone = _phoneController.text.trim();
+              var number = Uri.parse("tel:$phone");
               var canCall = await canLaunchUrl(number);
 
               if(canCall)
               launchUrl(number);
               else
               {
-              //SnackBar.messenger("You can't make phone calls from this device");
+                const snackBar = SnackBar( content: Text('You can not call from this device.') );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
               }
             }, icon: Icon(Icons.phone)),
             IconButton(onPressed: () async {
-              var number = Uri.parse("sms:${_phoneController}");
-              var canCall = await canLaunchUrl(number);
+              var text = _phoneController.text.trim();
+              var number = Uri.parse("sms:$text");
+              var canText = await canLaunchUrl(number);
 
-              if(canCall)
+              if(canText)
               launchUrl(number);
               else
               {
-              //SnackBar.messenger("You can't text from this device");
+                const snackBar = SnackBar( content: Text('You can not text from this device.') );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
               }
               }, icon: Icon(Icons.textsms))
           ],
@@ -124,21 +150,36 @@ class ProfilePageState extends State<ProfilePage> {
               ),
             ),),
             IconButton(onPressed: () async {
-              var email = Uri.parse("mailto:${_emailController}");
-              var canCall = await canLaunchUrl(email); //bool if your device handles the protocol
+              var address = _emailController.text.trim();
+              var email = Uri.parse("mailto:$address");
+              var canEmail = await canLaunchUrl(email);
 
-              if(canCall)
+              if(canEmail)
               launchUrl(email);
               else
               {
-              //SnackBar.messenger("You can't make phone calls from this device");
+                const snackBar = SnackBar( content: Text('You can not email from this device.') );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
               }
             }, icon: Icon(Icons.email))
           ],),
 
         OutlinedButton(child: Text("Back to Login"), onPressed: (){
           Navigator.pop(context);
-        })
+        }),
+          OutlinedButton(child:const Text("Save Fields?"), onPressed: () {
+            var firstName = _fNameController.value.text;
+            var lastName = _lNameController.value.text;
+            var phone = _phoneController.value.text;
+            var email = _emailController.value.text;
+
+            DataRepository.saveData(fName: firstName,
+                lName: lastName,
+                phoneField: phone,
+                emailField: email);
+            const snackBar = SnackBar( content: Text('Your fields have been saved.') );
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          },),
         ],
       ))
     );
