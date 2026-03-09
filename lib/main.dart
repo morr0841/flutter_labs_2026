@@ -1,7 +1,4 @@
-import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
-import 'package:my_flutter_labs/DataRepository.dart';
-import 'package:my_flutter_labs/ProfilePage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,19 +7,15 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      routes: {
-        "/" : (context) => MyHomePage(title: "Home page"),
-        "/profilePage" : (context) => ProfilePage()
-      },
-      debugShowCheckedModeBanner: false,
-      title: 'Lab 5',
+      title: 'Lab 06',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      initialRoute: "/",
+      home: const MyHomePage(title: 'Lab 06: Shopping List'),
     );
   }
 }
@@ -31,146 +24,121 @@ class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
   final String title;
 
-
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  late EncryptedSharedPreferences prefs;
-  late TextEditingController _passwordController;
-  late TextEditingController _userController;
-  String _imagePath = 'images/question-mark.png';
+  List<String> list1 = [];
 
+  var list2 = <String>[];
 
+  var isChecked = false;
+  var myFontSize = 0.0;
+  late TextEditingController _controller;
+  late TextEditingController _qtyController;
+
+  //you're visible
   @override
   void initState() {
     super.initState();
-    _passwordController = TextEditingController();
-    _userController = TextEditingController();
-    prefs = EncryptedSharedPreferences();
-
-    var userLoaded = false;
-    var passwordLoaded = false;
-
-    prefs.getString("UserPassword").then((passwordThere){
-      if (passwordThere.isNotEmpty) {
-        _passwordController.text = passwordThere;
-        passwordLoaded = true;
-      }
-
-      if (userLoaded && passwordLoaded) {
-        _showSnackBar();
-      }
-    });
-    prefs.getString("Username").then((userThere){
-      if (userThere.isNotEmpty) {
-        _userController.text = userThere;
-        userLoaded = true;
-      }
-
-      if (userLoaded && passwordLoaded) {
-        _showSnackBar();
-      }
-    });
-
-  }
-  void _showSnackBar() {
-      var snackBar =
-      SnackBar(content: Text('Your saved settings have been loaded.'),
-        action: SnackBarAction(label: 'Understood', onPressed: () {}),
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    _controller = TextEditingController();
+    _qtyController = TextEditingController();
   }
 
   @override
   void dispose() {
     super.dispose();
     //free memory:
-    _passwordController.dispose();
-    _userController.dispose();
+    _controller.dispose();
   }
+
+
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
+
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+
         title: Text(widget.title),
       ),
+      body: ListPage(),
 
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Padding(padding: EdgeInsets.symmetric(vertical: 0, horizontal: 25.0),
-              child: TextField(
-                controller: _userController,
-                decoration: InputDecoration(
-                hintText: 'Login',
-                border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(5)))
-                ),
-              ),
-            ),
-              Padding(padding: EdgeInsets.symmetric(vertical: 10, horizontal: 25.0),
-                child:
-                TextField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                      hintText: 'Password',
-                      border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(5)))
-                  ),
-                ),
-              ),
-
-
-            ElevatedButton(onPressed: () {
-              setState((){
-                var txt = _passwordController.value.text;
-
-                if (txt == "ASDF") {
-                  _imagePath = 'images/idea.png';
-                  showDialog<String>(
-                      context:context,
-                      builder: (context) => AlertDialog(
-                          title: const Text('Attention'),
-                          content: const Text("Would you like to save your username and password?"),
-                          actions: [
-                            OutlinedButton(child:const Text("Yes"), onPressed: (){
-                              var username = _userController.value.text;
-                              var passwordField = _passwordController.value.text;
-
-                              DataRepository.saveData(username: username, passwordField: passwordField);
-                              Navigator.of(context).pop();
-                              Navigator.pushNamed(context, "/profilePage");}),
-
-                            OutlinedButton(child:const Text("No."), onPressed: (){
-                              prefs.remove("UserPassword");
-                              Navigator.of(context).pop();
-                              Navigator.pushNamed(context, "/profilePage");})
-                          ]
-                      )
-                  );
-                }
-                else {
-                  _imagePath = 'images/stop.png';
-                }
-              });
-            },
-               child: Text('Login', style: TextStyle(color: Colors.blue, fontSize: 20),),
-            ),
-            Semantics(
-              label: _imagePath == 'images/idea.png'
-              ? 'image: lightbulb. Correct password.'
-              : _imagePath == 'images/stop.png'
-              ? 'image: stop sign. Wrong password.'
-              : 'image: Question marks. Default image. Please enter your Password',
-              child: Image.asset(_imagePath, width: 100, height: 100,),
-            )
-          ],
-        ),
-      ),
     );
   }
-}
 
+  Widget ListPage()
+  {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+
+          Row( mainAxisAlignment: MainAxisAlignment.spaceEvenly, children:[
+
+            Flexible( flex:2, child:TextField(controller: _controller,
+              decoration: InputDecoration(
+              hintText: "Item Name",
+              border: OutlineInputBorder(),
+              labelText: "Item field"
+              )
+            )),
+            Flexible( flex:2, child:TextField(controller: _qtyController,
+              decoration: InputDecoration(
+              hintText: "Quantity",
+              border: OutlineInputBorder(),
+              labelText: "Quantity field"
+              )
+            )),
+
+            Flexible(
+              flex:1,
+              child: ElevatedButton( child:Text("Add item"), onPressed:() {
+                setState(() {
+                  list1.add(_controller.value.text + ": Quantity: " + _qtyController.value.text);
+                  _controller.text = "";
+                  _qtyController.text = "";
+                });
+              } )
+            ),
+          ]),
+
+          Expanded(child:
+          ListView.builder(
+              itemCount: list1.length,
+              itemBuilder:(context, rowNum) =>
+                  GestureDetector(child:Text("Row $rowNum is: ${list1[rowNum]}") ,
+                      onHorizontalDragUpdate: (details) {
+
+                        if(details.primaryDelta!*details.primaryDelta! > 50.0) {
+                          showDialog<String>(
+                              context: context,
+                              builder: (BuildContext context) => AlertDialog(
+                                title: const Text('Delete this?'),
+                                content: const Text('are you sure?'),
+                                actions: <Widget>[
+                                  FilledButton(child:Text("Yes"), onPressed:() {
+                                    setState(() {
+                                      list1.removeAt(rowNum);
+                                    });
+
+                                    Navigator.pop(context);
+                                  }),
+                                  FilledButton(child:Text("Cancel"), onPressed:() {
+                                    Navigator.pop(context);
+
+                                  }),
+                                ],
+                              )
+                          );
+                        }
+
+                      })
+          )
+          )
+        ]);
+  }
+}
