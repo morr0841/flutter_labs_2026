@@ -6,8 +6,6 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -37,6 +35,7 @@ class _MyHomePageState extends State<MyHomePage> {
   var myFontSize = 0.0;
   late TextEditingController _controller;
   late TextEditingController _qtyController;
+  late TextEditingController _freshController;
 
   //you're visible
   @override
@@ -44,6 +43,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     _controller = TextEditingController();
     _qtyController = TextEditingController();
+    _freshController = TextEditingController();
   }
 
   @override
@@ -77,35 +77,46 @@ class _MyHomePageState extends State<MyHomePage> {
           Row( mainAxisAlignment: MainAxisAlignment.start, children:[
 
             Flexible( flex:2, child:
-              Padding(padding: EdgeInsets.fromLTRB(8, 10, 0, 8),
-              child:
+            Padding(padding: EdgeInsets.fromLTRB(8, 10, 0, 8),
+                child:
                 TextField(controller: _controller,
-                  decoration: InputDecoration(
-                  hintText: "Item Name",
-                  border: OutlineInputBorder(),
-                  labelText: "Type item name here"
-                  )
-            ))),
+                    decoration: InputDecoration(
+                        hintText: "Item Name",
+                        border: OutlineInputBorder(),
+                        labelText: "Type item name here"
+                    )
+                ))),
             Flexible( flex:2, child:
             Padding(padding: EdgeInsets.fromLTRB(0, 10, 8, 8),
-              child:
-              TextField(controller: _qtyController,
-                decoration: InputDecoration(
-                hintText: "Quantity",
-                border: OutlineInputBorder(),
-                labelText: "Type the quantity here"
-                )
-            ))),
+                child:
+                TextField(controller: _qtyController,
+                    decoration: InputDecoration(
+                        hintText: "Quantity",
+                        border: OutlineInputBorder(),
+                        labelText: "Type the quantity here"
+                    )
+                ))),
+            Flexible( flex:2, child:
+            Padding(padding: EdgeInsets.fromLTRB(8, 10, 0, 8),
+                child:
+                TextField(controller: _freshController,
+                    decoration: InputDecoration(
+                        hintText: "Freshness",
+                        border: OutlineInputBorder(),
+                        labelText: "How fresh is this?"
+                    )
+                ))),
 
             Flexible(
-              flex:1,
-              child: ElevatedButton( child:Text("Add item"), onPressed:() {
-                setState(() {
-                  list1.add(_controller.value.text + " Quantity: " + _qtyController.value.text);
-                  _controller.text = "";
-                  _qtyController.text = "";
-                });
-              } )
+                flex:1,
+                child: ElevatedButton( child:Text("Add item"), onPressed:() {
+                  setState(() {
+                    list1.add(_controller.value.text + " Quantity: " + _qtyController.value.text + " Freshness: " + _freshController.value.text);
+                    _controller.text = "";
+                    _qtyController.text = "";
+                    _freshController.text = "";
+                  });
+                } )
             ),
           ]),
 
@@ -115,33 +126,33 @@ class _MyHomePageState extends State<MyHomePage> {
               itemBuilder:(context, rowNum) {
                 return
                   GestureDetector(
-                      onLongPress: () {
-                        showDialog<String>(
-                            context: context,
-                            builder: (BuildContext context) => AlertDialog(
-                                title: const Text('Delete this?'),
-                                content: const Text('are you sure?'),
-                                actions: <Widget>[
+                    onLongPress: () {
+                      showDialog<String>(
+                        context: context,
+                        builder: (BuildContext context) => AlertDialog(
+                          title: const Text('Delete this?'),
+                          content: const Text('are you sure?'),
+                          actions: <Widget>[
                             FilledButton(child:Text("Yes"), onPressed:() {
-                          setState(() {
-                            list1.removeAt(rowNum);
-                          });
+                              setState(() {
+                                list1.removeAt(rowNum);
+                              });
 
-                          Navigator.pop(context);
-                        }),
-                        FilledButton(child:Text("Cancel"), onPressed:() {
-                        Navigator.pop(context);
-                  },),],),);},
-                      child:
-                        Row( mainAxisAlignment: MainAxisAlignment.center,
-                              children:[ Text("${rowNum + 1}: ${list1[rowNum]}")]),
+                              Navigator.pop(context);
+                            }),
+                            FilledButton(child:Text("Cancel"), onPressed:() {
+                              Navigator.pop(context);
+                            },),],),);},
+                    child:
+                    Row( mainAxisAlignment: MainAxisAlignment.center,
+                        children:[ Text("${rowNum + 1}: ${list1[rowNum]}")]),
                   );
 
 
 
 
-          })
+              })
           ),
-    ]);
+        ]);
   }
 }
