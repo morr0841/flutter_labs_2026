@@ -57,12 +57,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
-
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-
         title: Text(widget.title),
       ),
       body: ListPage(),
@@ -77,28 +74,34 @@ class _MyHomePageState extends State<MyHomePage> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
 
-          Row( mainAxisAlignment: MainAxisAlignment.spaceEvenly, children:[
+          Row( mainAxisAlignment: MainAxisAlignment.start, children:[
 
-            Flexible( flex:2, child:TextField(controller: _controller,
-              decoration: InputDecoration(
-              hintText: "Item Name",
-              border: OutlineInputBorder(),
-              labelText: "Item field"
-              )
-            )),
-            Flexible( flex:2, child:TextField(controller: _qtyController,
-              decoration: InputDecoration(
-              hintText: "Quantity",
-              border: OutlineInputBorder(),
-              labelText: "Quantity field"
-              )
-            )),
+            Flexible( flex:2, child:
+              Padding(padding: EdgeInsets.fromLTRB(8, 10, 0, 8),
+              child:
+                TextField(controller: _controller,
+                  decoration: InputDecoration(
+                  hintText: "Item Name",
+                  border: OutlineInputBorder(),
+                  labelText: "Type item name here"
+                  )
+            ))),
+            Flexible( flex:2, child:
+            Padding(padding: EdgeInsets.fromLTRB(0, 10, 8, 8),
+              child:
+              TextField(controller: _qtyController,
+                decoration: InputDecoration(
+                hintText: "Quantity",
+                border: OutlineInputBorder(),
+                labelText: "Type the quantity here"
+                )
+            ))),
 
             Flexible(
               flex:1,
               child: ElevatedButton( child:Text("Add item"), onPressed:() {
                 setState(() {
-                  list1.add(_controller.value.text + ": Quantity: " + _qtyController.value.text);
+                  list1.add(_controller.value.text + " Quantity: " + _qtyController.value.text);
                   _controller.text = "";
                   _qtyController.text = "";
                 });
@@ -109,36 +112,36 @@ class _MyHomePageState extends State<MyHomePage> {
           Expanded(child:
           ListView.builder(
               itemCount: list1.length,
-              itemBuilder:(context, rowNum) =>
-                  GestureDetector(child:Text("Row $rowNum is: ${list1[rowNum]}") ,
-                      onHorizontalDragUpdate: (details) {
-
-                        if(details.primaryDelta!*details.primaryDelta! > 50.0) {
-                          showDialog<String>(
-                              context: context,
-                              builder: (BuildContext context) => AlertDialog(
+              itemBuilder:(context, rowNum) {
+                return
+                  GestureDetector(
+                      onLongPress: () {
+                        showDialog<String>(
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
                                 title: const Text('Delete this?'),
                                 content: const Text('are you sure?'),
                                 actions: <Widget>[
-                                  FilledButton(child:Text("Yes"), onPressed:() {
-                                    setState(() {
-                                      list1.removeAt(rowNum);
-                                    });
+                            FilledButton(child:Text("Yes"), onPressed:() {
+                          setState(() {
+                            list1.removeAt(rowNum);
+                          });
 
-                                    Navigator.pop(context);
-                                  }),
-                                  FilledButton(child:Text("Cancel"), onPressed:() {
-                                    Navigator.pop(context);
+                          Navigator.pop(context);
+                        }),
+                        FilledButton(child:Text("Cancel"), onPressed:() {
+                        Navigator.pop(context);
+                  },),],),);},
+                      child:
+                        Row( mainAxisAlignment: MainAxisAlignment.center,
+                              children:[ Text("${rowNum + 1}: ${list1[rowNum]}")]),
+                  );
 
-                                  }),
-                                ],
-                              )
-                          );
-                        }
 
-                      })
-          )
-          )
-        ]);
+
+
+          })
+          ),
+    ]);
   }
 }
