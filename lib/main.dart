@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_labs/Item.dart';
 import 'package:my_flutter_labs/ItemDatabase.dart';
-
+import 'package:sqflite/sqflite.dart';
 import 'ItemDao.dart';
 import 'Item.dart';
 
@@ -14,11 +14,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Lab 06',
+      title: 'Week 8',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'Lab 06: Shopping List'),
+      home: const MyHomePage(title: 'Week 8: Using SQL'),
     );
   }
 }
@@ -42,7 +42,6 @@ class _MyHomePageState extends State<MyHomePage> {
   late TextEditingController _controller;
   late TextEditingController _qtyController;
 
-  //you're visible
   @override
   void initState() {
     super.initState();
@@ -56,7 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
     //query all data
     itemDao.getAllItems().then( ( listOfItems ) {
       setState(() { //redraw GUI
-        list1.addAll(listOfItems); //put the items in the list
+        list1 = listOfItems; //put the items in the list
       });
     });
     } );
@@ -115,14 +114,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
             Flexible(
                 flex:1,
-                child: ElevatedButton( child:Text("Add item"), onPressed:() {
+                child: ElevatedButton( child:Text("Add item"), onPressed:() async {
+                  Item newItem = Item(Item.ID++, int.parse(_qtyController.value.text), _controller.value.text);
+                  await itemDao.insertItem(newItem);
+                  final updatedList = await itemDao.getAllItems();
+
                   setState(() {
-                    Item newItem = Item(Item.ID++, _qtyController.value.text, _controller.value.text);
-                    itemDao.insertItem(newItem);
-                    list1.add(newItem);
-                    _controller.text = "";
-                    _qtyController.text = "";
+                    list1 = updatedList;
                   });
+
+                  _controller.clear();
+                  _qtyController.clear();
                 } )
             ),
           ]),
@@ -140,11 +142,15 @@ class _MyHomePageState extends State<MyHomePage> {
                           title: const Text('Delete this?'),
                           content: const Text('are you sure?'),
                           actions: <Widget>[
-                            FilledButton(child:Text("Yes"), onPressed:() {
-                                setState(() {
-                                  list1.removeAt(rowNum);
-                                  Item deleteThisItem = list1[rowNum];
-                                  itemDao.deleteItem(deleteThisItem);
+                            FilledButton(child:Text("Yes"), onPressed:() async {
+                              Item deleteThisItem = list1[rowNum];
+
+                              await itemDao.deleteItem(deleteThisItem);
+
+                              final updatedList = await itemDao.getAllItems();
+
+                              setState(() {
+                                  list1 = updatedList;
                                 });
 
                                 Navigator.pop(context);

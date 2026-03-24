@@ -5,7 +5,7 @@ class Item {
   static int ID = 1; //static class variable for handing out IDs
 
   Item(this.id, this.quantity, this.name){ //shortform constructor
-    if (this.id > ID){
+    if (this.id >= ID){
       ID = this.id + 1;
     }
   }
@@ -14,6 +14,6 @@ class Item {
   final int id;
 
   String name;
-  String quantity;
+  int quantity;
 
 }
