@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:my_flutter_labs/Item.dart';
+import 'package:my_flutter_labs/ItemDatabase.dart';
+
+import 'ItemDao.dart';
+import 'Item.dart';
 
 void main() {
   runApp(const MyApp());
@@ -27,15 +32,15 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<String> list1 = [];
+  List<Item> list1 = [];
 
   var list2 = <String>[];
 
+  late ItemDao itemDao;
   var isChecked = false;
   var myFontSize = 0.0;
   late TextEditingController _controller;
   late TextEditingController _qtyController;
-  late TextEditingController _freshController;
 
   //you're visible
   @override
@@ -43,7 +48,18 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     _controller = TextEditingController();
     _qtyController = TextEditingController();
-    _freshController = TextEditingController();
+
+    //load whats in the DB
+    final database = $FloorItemDatabase.databaseBuilder('ItemFile.db').build().then( (database) {
+    itemDao = database.myDao;
+
+    //query all data
+    itemDao.getAllItems().then( ( listOfItems ) {
+      setState(() { //redraw GUI
+        list1.addAll(listOfItems); //put the items in the list
+      });
+    });
+    } );
   }
 
   @override
@@ -96,25 +112,16 @@ class _MyHomePageState extends State<MyHomePage> {
                         labelText: "Type the quantity here"
                     )
                 ))),
-            Flexible( flex:2, child:
-            Padding(padding: EdgeInsets.fromLTRB(8, 25, 0, 8),
-                child:
-                TextField(controller: _freshController,
-                    decoration: InputDecoration(
-                        hintText: "Freshness",
-                        border: OutlineInputBorder(),
-                        labelText: "How fresh is this?"
-                    )
-                ))),
 
             Flexible(
                 flex:1,
                 child: ElevatedButton( child:Text("Add item"), onPressed:() {
                   setState(() {
-                    list1.add(_controller.value.text + " Quantity: " + _qtyController.value.text + " Freshness: " + _freshController.value.text);
+                    Item newItem = Item(Item.ID++, _qtyController.value.text, _controller.value.text);
+                    itemDao.insertItem(newItem);
+                    list1.add(newItem);
                     _controller.text = "";
                     _qtyController.text = "";
-                    _freshController.text = "";
                   });
                 } )
             ),
@@ -134,18 +141,20 @@ class _MyHomePageState extends State<MyHomePage> {
                           content: const Text('are you sure?'),
                           actions: <Widget>[
                             FilledButton(child:Text("Yes"), onPressed:() {
-                              setState(() {
-                                list1.removeAt(rowNum);
-                              });
+                                setState(() {
+                                  list1.removeAt(rowNum);
+                                  Item deleteThisItem = list1[rowNum];
+                                  itemDao.deleteItem(deleteThisItem);
+                                });
 
-                              Navigator.pop(context);
+                                Navigator.pop(context);
                             }),
                             FilledButton(child:Text("Cancel"), onPressed:() {
                               Navigator.pop(context);
                             },),],),);},
                     child:
                     Row( mainAxisAlignment: MainAxisAlignment.center,
-                        children:[ Text("${rowNum + 1}: ${list1[rowNum]}")]),
+                        children:[ Text("Item ${rowNum + 1} - Name: ${list1[rowNum].name}, Quantity: ${list1[rowNum].quantity}")]),
                   );
 
 
