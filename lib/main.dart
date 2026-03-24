@@ -77,7 +77,7 @@ class _MyHomePageState extends State<MyHomePage> {
           Row( mainAxisAlignment: MainAxisAlignment.start, children:[
 
             Flexible( flex:2, child:
-            Padding(padding: EdgeInsets.fromLTRB(8, 10, 0, 8),
+            Padding(padding: EdgeInsets.fromLTRB(25, 25, 0, 8),
                 child:
                 TextField(controller: _controller,
                     decoration: InputDecoration(
@@ -87,7 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     )
                 ))),
             Flexible( flex:2, child:
-            Padding(padding: EdgeInsets.fromLTRB(0, 10, 8, 8),
+            Padding(padding: EdgeInsets.fromLTRB(0, 25, 8, 8),
                 child:
                 TextField(controller: _qtyController,
                     decoration: InputDecoration(
@@ -97,7 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     )
                 ))),
             Flexible( flex:2, child:
-            Padding(padding: EdgeInsets.fromLTRB(8, 10, 0, 8),
+            Padding(padding: EdgeInsets.fromLTRB(8, 25, 0, 8),
                 child:
                 TextField(controller: _freshController,
                     decoration: InputDecoration(
