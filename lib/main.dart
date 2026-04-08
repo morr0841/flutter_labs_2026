@@ -35,7 +35,7 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Item> list1 = [];
 
   var list2 = <String>[];
-
+  Item? selectedItem = null;
   late ItemDao itemDao;
   var isChecked = false;
   var myFontSize = 0.0;
@@ -77,9 +77,65 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: ListPage(),
+      body: reactiveLayout(),
 
     );
+  }
+
+  Widget reactiveLayout(){
+
+    var size = MediaQuery.of(context).size; ///how big is the screen?
+    var height = size.height;
+    var width = size.width;
+
+
+
+    if( (width>height) && (width > 720)) {
+      //tablet
+      return Row( children:[
+        Expanded(child: ListPage(),    flex:2), //Left side 40%
+        Expanded(child: DetailsPage(), flex:3) //Right side, 60%
+      ]);
+    }
+    else{ //Portrait mode / Phone
+      if( selectedItem== null)
+        return ListPage(); //show the list
+      else
+        return DetailsPage(); //show the details
+    }
+  }
+
+  Widget DetailsPage() {
+    if(selectedItem != null){
+      return Center(child:Column( mainAxisAlignment: MainAxisAlignment.center, children: [
+        Text("Name: ${selectedItem!.name}", style: TextStyle(fontSize: 40.0),),
+        Text("Quantity: ${selectedItem!.quantity}", style: TextStyle(fontSize: 40.0)),
+        Spacer(),
+        OutlinedButton(onPressed: () async{
+          Item deleteThisItem = selectedItem!;
+
+          await itemDao.deleteItem(deleteThisItem);
+
+          final updatedList = await itemDao.getAllItems();
+
+          setState(() {
+            list1 = updatedList;
+            selectedItem = null;
+          });
+        }, child: Text("Delete")),
+
+
+        OutlinedButton(onPressed: (){
+          setState(() { selectedItem = null; });
+        }, child: Text("Close"))
+
+      ],)
+
+      );
+    }
+    else{
+      return Text("Please select an item from the list",style: TextStyle(fontSize: 30.0));
+    }
   }
 
   Widget ListPage()
@@ -135,29 +191,11 @@ class _MyHomePageState extends State<MyHomePage> {
               itemBuilder:(context, rowNum) {
                 return
                   GestureDetector(
-                    onLongPress: () {
-                      showDialog<String>(
-                        context: context,
-                        builder: (BuildContext context) => AlertDialog(
-                          title: const Text('Delete this?'),
-                          content: const Text('are you sure?'),
-                          actions: <Widget>[
-                            FilledButton(child:Text("Yes"), onPressed:() async {
-                              Item deleteThisItem = list1[rowNum];
-
-                              await itemDao.deleteItem(deleteThisItem);
-
-                              final updatedList = await itemDao.getAllItems();
-
-                              setState(() {
-                                  list1 = updatedList;
-                                });
-
-                                Navigator.pop(context);
-                            }),
-                            FilledButton(child:Text("Cancel"), onPressed:() {
-                              Navigator.pop(context);
-                            },),],),);},
+                    onTap: () {
+                      setState(() {
+                        selectedItem = list1[rowNum];
+                      });
+                    },
                     child:
                     Row( mainAxisAlignment: MainAxisAlignment.center,
                         children:[ Text("Item ${rowNum + 1} - Name: ${list1[rowNum].name}, Quantity: ${list1[rowNum].quantity}")]),
