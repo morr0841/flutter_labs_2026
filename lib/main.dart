@@ -3,7 +3,6 @@ import 'package:my_flutter_labs/Item.dart';
 import 'package:my_flutter_labs/ItemDatabase.dart';
 import 'package:sqflite/sqflite.dart';
 import 'ItemDao.dart';
-import 'Item.dart';
 
 void main() {
   runApp(const MyApp());
@@ -58,7 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
         list1 = listOfItems; //put the items in the list
       });
     });
-    } );
+    });
   }
 
   @override
@@ -114,17 +113,25 @@ class _MyHomePageState extends State<MyHomePage> {
 
             Flexible(
                 flex:1,
-                child: ElevatedButton( child:Text("Add item"), onPressed:() async {
-                  Item newItem = Item(Item.ID++, int.parse(_qtyController.value.text), _controller.value.text);
-                  await itemDao.insertItem(newItem);
-                  final updatedList = await itemDao.getAllItems();
+                child:
+                ElevatedButton( child:Text("Add item"), onPressed:() async {
+                  try {
+                    int qty = int.tryParse(_qtyController.text) ?? 0;
+                    Item newItem = Item(null, qty, _controller.text);
+                    await itemDao.insertItem(newItem);
+                    final updatedList = await itemDao.getAllItems();
 
-                  setState(() {
-                    list1 = updatedList;
-                  });
+                    setState(() {
+                      list1 = updatedList;
+                    });
 
-                  _controller.clear();
-                  _qtyController.clear();
+                    _controller.clear();
+                    _qtyController.clear();
+                  }
+                  catch (e) {
+                    print("ERROR: $e");
+                  }
+
                 } )
             ),
           ]),
@@ -160,12 +167,11 @@ class _MyHomePageState extends State<MyHomePage> {
                             },),],),);},
                     child:
                     Row( mainAxisAlignment: MainAxisAlignment.center,
-                        children:[ Text("Item ${rowNum + 1} - Name: ${list1[rowNum].name}, Quantity: ${list1[rowNum].quantity}")]),
+                        children:[
+                          Text("Item ${rowNum + 1} - Name: ${list1[rowNum].name}, "
+                              "Quantity: ${list1[rowNum].quantity}")
+                        ]),
                   );
-
-
-
-
               })
           ),
         ]);
